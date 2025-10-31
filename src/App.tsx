@@ -5,6 +5,7 @@ import Community from './pages/Community/Community';
 import Contact from './pages/Contact/Contact';
 import Exchange from './pages/Exchange/Exchange';
 import Events from './pages/Event/Event';
+import Profile from './pages/Profile/Profile';
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                 <Route path="/exchange" element={<Exchange />} />
                 <Route path="/events" element={<Events />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/profile" element={<Profile />} />
             </Routes>
         </>
     );
