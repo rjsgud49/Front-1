@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
+// 헤더에서 프로필 이미지 클릭 시 나타나는 드롭다운 메뉴 컴포넌트임 ㅇㅇ
 const ProfileDropdown = () => {
     const navigate = useNavigate();
 
