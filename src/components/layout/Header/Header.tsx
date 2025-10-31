@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import York_Construction_72_logo from '../../../assets/York_Construction_72_logo.svg';
-import ProfileDropdown from './ProfileDropDown';
+import ProfileDropdown from '../../../pages/Profile/ProfileDropdown';
 
 const Header = () => {
     const [openDropdown, setOpenDropdown] = useState(false);
