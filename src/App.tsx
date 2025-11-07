@@ -7,6 +7,7 @@ import Exchange from './pages/Exchange/Exchange';
 import Events from './pages/Event/Event';
 import Profile from './pages/Profile/Profile';
 import Login from './pages/Auth/Login';
+import AdminLogin from './pages/Auth/AdminLogin';
 import NotFound from './pages/NotFound';
 import Blog from './pages/Blog/Blog';
 import Form from './pages/Contact/Form';
@@ -30,6 +31,7 @@ function App() {
 
                 {/* 인증 관련 라우트 */}
                 <Route path="/login" element={<Login />} />
+                <Route path="/admin/login" element={<AdminLogin />} />
 
                 {/* 맨 마지막에 배치할 것!! */}
                 <Route path="*" element={<NotFound />} />
