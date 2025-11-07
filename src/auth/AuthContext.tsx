@@ -2,57 +2,100 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 
-type User = { id: string } | null;
+type User = { id: string; role?: string } | null;
+type LoginKind = 'user' | 'admin';
+type LoginOptions = {
+    kind?: LoginKind; // 'user' | 'admin' (기본: user)
+    path?: string; // 직접 경로 지정 가능: '/auth/partner/login'
+};
+
 type AuthContextType = {
     user: User;
-    login: (id: string, password: string) => Promise<boolean>;
+    login: (id: string, password: string, opts?: LoginOptions) => Promise<boolean>;
     logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// 공용 axios 인스턴스
 const api = axios.create({
     baseURL: 'https://overpolemical-maria-lapidifical.ngrok-free.dev',
     headers: { 'Content-Type': 'application/json' },
-    withCredentials: false, // 세션-쿠키 인증이면 true, 토큰 인증이면 false
+    withCredentials: false, // 세션-쿠키가 아니라 토큰이므로 false 유지
 });
+
+// JWT payload 디코더 (서버가 role을 JWT에 넣어주므로 활용)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function decodeJwt(token: string): any | null {
+    try {
+        const payload = token.split('.')[1];
+        const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+        return JSON.parse(decodeURIComponent(escape(json)));
+    } catch {
+        return null;
+    }
+}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User>(null);
 
-    // 새로고침 시 복구
+    // 새로고침 시 유저/토큰 복구 + axios 헤더 주입
     useEffect(() => {
         const savedUser = localStorage.getItem('auth_user');
+        const tokenType = localStorage.getItem('token_type');
+        const accessToken = localStorage.getItem('access_token');
         if (savedUser) setUser(JSON.parse(savedUser));
+        if (tokenType && accessToken) {
+            api.defaults.headers.common['Authorization'] = `${tokenType} ${accessToken}`;
+        }
     }, []);
 
-    const login = async (id: string, password: string) => {
+    const login = async (id: string, password: string, opts?: LoginOptions) => {
+        // 엔드포인트 결정: path > kind > 기본
+        const endpoint = opts?.path ?? (opts?.kind === 'admin' ? '/auth/admin/login' : '/auth/login');
+
         try {
-            const res = await api.post('/auth/login', { id, password });
+            const res = await api.post(endpoint, { id, password });
 
-            // 서버 응답 예시 가정: { success: boolean, data?: { user?: { id: string; ... }, accessToken?: string }, message?: string }
-            const ok = !!res.data?.success;
-            if (!ok) return false;
+            // 백엔드 포맷에 정확히 맞춤
+            if (!res.data?.success || !res.data?.data) return false;
 
-            // 토큰 추출 (가능한 위치 모두 시도)
-            const accessToken =
-                res.data?.data?.accessToken ?? res.headers?.['authorization'] ?? res.data?.token ?? null;
+            const {
+                tokenType, // "Bearer"
+                accessToken, // JWT
+                expiresIn, // ms (예: 900000)
+                refreshToken, // JWT
+            } = res.data.data as {
+                tokenType: string;
+                accessToken: string;
+                expiresIn: number;
+                refreshToken: string;
+            };
 
-            if (accessToken) {
-                localStorage.setItem('access_token', accessToken);
-            }
+            if (!tokenType || !accessToken) return false;
 
-            // 유저 정보 추출 (없으면 최소 id만 저장)
-            const serverUser: User =
-                res.data?.data?.user ?? (res.data?.data?.id ? { id: String(res.data.data.id) } : { id });
+            // 만료시각 계산(클라이언트 기준)
+            const expiresAt = Date.now() + (Number(expiresIn) || 0);
 
-            setUser(serverUser);
-            localStorage.setItem('auth_user', JSON.stringify(serverUser));
+            // JWT에서 role 추출 (payload에 role이 들어있음)
+            const payload = decodeJwt(accessToken);
+            const role: string | undefined = payload?.role;
+
+            // 화면 전역에서 쓸 최소 유저 정보
+            const nextUser: User = { id, role };
+
+            // 저장
+            localStorage.setItem('token_type', tokenType);
+            localStorage.setItem('access_token', accessToken);
+            localStorage.setItem('refresh_token', refreshToken);
+            localStorage.setItem('expires_at', String(expiresAt));
+            localStorage.setItem('auth_user', JSON.stringify(nextUser));
+
+            // axios Authorization 헤더 주입
+            api.defaults.headers.common['Authorization'] = `${tokenType} ${accessToken}`;
+
+            setUser(nextUser);
             return true;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (e: unknown) {
-            // 400/401 등 실패는 false
+        } catch {
             return false;
         }
     };
@@ -60,7 +103,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const logout = () => {
         setUser(null);
         localStorage.removeItem('auth_user');
+        localStorage.removeItem('token_type');
         localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('expires_at');
+        delete api.defaults.headers.common['Authorization'];
     };
 
     const value = useMemo(() => ({ user, login, logout }), [user]);
