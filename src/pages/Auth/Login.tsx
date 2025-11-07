@@ -1,6 +1,6 @@
 // src/pages/Login.tsx
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext.tsx';
 
 const Login = () => {
@@ -59,6 +59,11 @@ const Login = () => {
                         required
                         autoComplete="current-password"
                     />
+                </div>
+                <div className="flex justify-center mt-4">
+                    <Link to="/admin/login" className="text-sm text-blue-600 hover:underline">
+                        관리자 계정으로 로그인하기
+                    </Link>
                 </div>
 
                 {err && <p className="mt-1 text-sm text-red-600">{err}</p>}
