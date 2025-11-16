@@ -13,6 +13,6 @@ export const Div:FC<DivProps> = ({
     left, right, top, bottom,
     minWidth, maxWidth, minHeight, maxHeight
   }
-  const className = [src && "bg-gray-200", _className].join(' ')
+  const className = [src && "bg-white", _className].join(' ')
   return <div {...props} style={style} className={className} />
 }

@@ -6,66 +6,12 @@ import ActivityCalendar from 'react-github-calendar';
 import { labels } from '../../components/githubCalendarLabels';
 import BlogCarousel from '../../components/BlogCarousel';
 import { Div } from '../../components/Div';
-
-const blogMockData = [
-  {
-    title: '제목1',
-    description: '테스트용 더미 설명1',
-    url: 'https://example.com/blog1',
-  },
-  {
-    title: '제목2',
-    description: '테스트용 더미 설명1',
-    url: 'https://example.com/blog1',
-  },
-  {
-    title: '제목3',
-    description: '테스트용 더미 설명1',
-    url: 'https://example.com/blog1',
-  },
-  {
-    title: '제목4',
-    description: '테스트용 더미 설명1',
-    url: 'https://example.com/blog1',
-  },
-  {
-    title: '제목5',
-    description: '테스트용 더미 설명1',
-    url: 'https://example.com/blog1',
-  },
-  {
-    title: '제목6',
-    description: '테스트용 더미 설명1',
-    url: 'https://example.com/blog1',
-  },
-  {
-    title: '제목7',
-    description: '테스트용 더미 설명1',
-    url: 'https://example.com/blog1',
-  },
-  {
-    title: '제목8',
-    description: '테스트용 더미 설명1',
-    url: 'https://example.com/blog1',
-  },
-];
-
-const banners = [
-  // 넣을 배너 이미지 URL들
-  'https://static.solved.ac/profile_bg/profile/kit2025b-706ff93c-5758-4136-8c62-7df54b1065ef.png',
-  'https://static.solved.ac/profile_bg/profile/kit2025a-a3bae173-3be5-4451-ba7f-c1995dca9959.jpeg',
-  'https://static.solved.ac/profile_bg/profile/halloween2025-34185f0e-62a4-4499-bea4-9e91d37aa15c.jpeg',
-  'https://static.solved.ac/profile_bg/profile/lemoncup-c805203e-d3f6-4865-a36d-6ea5ba8dce5c.png',
-  'https://static.solved.ac/profile_bg/profile/iam2025half-2523fbbd-ffa5-4445-8588-e34975e98af8.png',
-  'https://static.solved.ac/profile_bg/profile/skh2025-118a72a5-6440-4ca5-aebe-75f854cf1a94.png',
-  'https://static.solved.ac/profile_bg/profile/k512_2025-d13477dc-0ea4-4094-84cb-12353698ebd4.png',
-  'https://static.solved.ac/profile_bg/profile/ucpc2025-2df0cbcc-0aa5-438a-8532-1a7ef2eeab44.png',
-  'https://static.solved.ac/profile_bg/suapc2021w/suapc2021w.png',
-];
+import { useAuth } from '../../auth/AuthContext';
 
 export default function Profile() {
+  const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedBanner, setSelectedBanner] = useState<number | null>(null);
+  const [selectedBanner, setSelectedBanner] = useState<number>(0);
 
   const handleEditClick = () => {
     setIsEditing(!isEditing);
@@ -86,17 +32,18 @@ export default function Profile() {
     <div className="flex flex-col items-center h-screen">
       <Div
         className="flex w-full text-center bg-center bg-cover h-1/3 outline-1"
-        src={`${selectedBanner !== null ? banners[selectedBanner] : null}`}
+        src={`${banners[selectedBanner]}`}
       >
-        배너
-        <Icon
-          className="absolute right-0 p-2 cursor-pointer"
-          style={{ color: isEditing ? '#3B89FF' : 'white' }}
-          icon="mdi:pencil"
-          width="44"
-          height="44"
-          onClick={handleEditClick}
-        />
+        <div className="absolute right-0 w-auto mt-2 mr-2 bg-black rounded-2xl">
+          <Icon
+            className="p-2 cursor-pointer "
+            style={{ color: isEditing ? '#3B89FF' : 'white' }}
+            icon="mdi:pencil"
+            width="44"
+            height="44"
+            onClick={handleEditClick}
+          />
+        </div>
       </Div>
       <div className="flex flex-row w-full">
         {/* 프로필 섹션 */}
@@ -105,7 +52,7 @@ export default function Profile() {
           <div className="pt-24 mb-6">
             <Avatar
               size="10rem"
-              src="https://api.dicebear.com/9.x/identicon/svg"
+              src={`${user?.profileImage}`}
               className="absolute bg-cover border-4 border-purple-300 rounded-full left-30 -top-20"
             />
             <h2 className="w-full ml-3 text-2xl font-black text-left">주석 안쓰는 개발자</h2>
@@ -234,3 +181,59 @@ export default function Profile() {
     </div>
   );
 }
+
+const blogMockData = [
+  {
+    title: '제목1',
+    description: '테스트용 더미 설명1',
+    url: 'https://example.com/blog1',
+  },
+  {
+    title: '제목2',
+    description: '테스트용 더미 설명1',
+    url: 'https://example.com/blog1',
+  },
+  {
+    title: '제목3',
+    description: '테스트용 더미 설명1',
+    url: 'https://example.com/blog1',
+  },
+  {
+    title: '제목4',
+    description: '테스트용 더미 설명1',
+    url: 'https://example.com/blog1',
+  },
+  {
+    title: '제목5',
+    description: '테스트용 더미 설명1',
+    url: 'https://example.com/blog1',
+  },
+  {
+    title: '제목6',
+    description: '테스트용 더미 설명1',
+    url: 'https://example.com/blog1',
+  },
+  {
+    title: '제목7',
+    description: '테스트용 더미 설명1',
+    url: 'https://example.com/blog1',
+  },
+  {
+    title: '제목8',
+    description: '테스트용 더미 설명1',
+    url: 'https://example.com/blog1',
+  },
+];
+
+const banners = [
+  // 넣을 배너 이미지 URL들
+  'https://static.solved.ac/profile_bg/profile/kit2025b-706ff93c-5758-4136-8c62-7df54b1065ef.png',
+  'https://static.solved.ac/profile_bg/profile/kit2025a-a3bae173-3be5-4451-ba7f-c1995dca9959.jpeg',
+  'https://static.solved.ac/profile_bg/profile/halloween2025-34185f0e-62a4-4499-bea4-9e91d37aa15c.jpeg',
+  'https://static.solved.ac/profile_bg/profile/lemoncup-c805203e-d3f6-4865-a36d-6ea5ba8dce5c.png',
+  'https://static.solved.ac/profile_bg/profile/iam2025half-2523fbbd-ffa5-4445-8588-e34975e98af8.png',
+  'https://static.solved.ac/profile_bg/profile/skh2025-118a72a5-6440-4ca5-aebe-75f854cf1a94.png',
+  'https://static.solved.ac/profile_bg/profile/k512_2025-d13477dc-0ea4-4094-84cb-12353698ebd4.png',
+  'https://static.solved.ac/profile_bg/profile/ucpc2025-2df0cbcc-0aa5-438a-8532-1a7ef2eeab44.png',
+  'https://static.solved.ac/profile_bg/suapc2021w/suapc2021w.png',
+];
