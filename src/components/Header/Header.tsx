@@ -71,7 +71,7 @@ const Header = () => {
           <>
             {/*사용자 이름*/}
             <div>
-              <span className="font-bold">{user.name}</span>님
+              <span className="mr-2 font-bold">{user.name}</span>님
             </div>
 
             {/* 알림 아이콘 */}
