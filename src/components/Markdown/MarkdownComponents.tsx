@@ -4,7 +4,11 @@ import type { ReactNode, HTMLAttributes } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-// code 블록용 타입 따로 정의
+// 🔥 여기서 명확하게 타입 캐스팅 (TS2769 문제 해결 핵심)
+const oneDarkStyle = oneDark as unknown as {
+  [key: string]: React.CSSProperties;
+};
+
 type CodeProps = HTMLAttributes<HTMLElement> & {
   inline?: boolean;
   className?: string;
@@ -28,38 +32,12 @@ export const markdownComponents: Components = {
     <p className="my-2 leading-relaxed text-gray-800" {...props} />
   ),
 
-  a: ({ node, ...props }) => (
-    <a
-      className="text-blue-600 underline underline-offset-2 hover:text-blue-700"
-      {...props}
-    />
-  ),
-
-  ul: ({ node, ...props }) => (
-    <ul className="my-2 space-y-1 list-disc list-inside" {...props} />
-  ),
-
-  ol: ({ node, ...props }) => (
-    <ol className="my-2 space-y-1 list-decimal list-inside" {...props} />
-  ),
-
-  li: ({ node, ...props }) => (
-    <li className="leading-relaxed text-gray-800" {...props} />
-  ),
-
-  blockquote: ({ node, ...props }) => (
-    <blockquote
-      className="pl-4 my-3 text-sm italic text-gray-600 border-l-4 border-gray-300"
-      {...props}
-    />
-  ),
-
-  // ✨✨✨ 코드 하이라이팅 지원
+  /** ----------------------------------------
+   * 🧩 코드 블록 (SyntaxHighlighter)
+   ---------------------------------------- */
   code: ({ inline, className, children, ...props }: CodeProps) => {
     const match = /language-(\w+)/.exec(className || "");
-    const language = match?.[1];
 
-    // Inline code: 기존처럼 유지
     if (inline) {
       return (
         <code
@@ -71,19 +49,17 @@ export const markdownComponents: Components = {
       );
     }
 
-    // Block code + 🔥SyntaxHighlighter 적용
     return (
       <SyntaxHighlighter
-        style={oneDark} // 수정 금지
-        language={language}
+        language={match ? match[1] : undefined}
+        style={oneDarkStyle}
         PreTag="div"
         customStyle={{
-          borderRadius: "0.5rem",
-          padding: "1rem",
+          marginTop: "12px",
+          marginBottom: "12px",
+          borderRadius: "12px",
           fontSize: "0.85rem",
-          background: "#282c34",
         }}
-        {...props}
       >
         {String(children).replace(/\n$/, "")}
       </SyntaxHighlighter>
@@ -93,6 +69,7 @@ export const markdownComponents: Components = {
   hr: ({ node, ...props }) => (
     <hr className="my-6 border-t border-gray-200" {...props} />
   ),
+
   img: ({ node, ...props }) => (
     <img
       className="object-contain my-4 rounded-lg max-h-96"
