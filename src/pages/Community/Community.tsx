@@ -35,15 +35,23 @@ export default function CommunityList() {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const res = await api.get("/post/list", {
-          params: { page, size },
-        });
+
+        const res = await api.get("/post/list", { params: { page, size } });
+
+        // 🔥 응답 구조 검증
+        if (!res.data || !res.data.data) {
+          console.error("Invalid response:", res.data);
+          setPosts([]);
+          setTotalPages(1);
+          return;
+        }
 
         const data: PageResponse = res.data.data;
-        setPosts(data.content);
-        setTotalPages(data.totalPages);
+
+        setPosts(data.content ?? []);
+        setTotalPages(data.totalPages ?? 1);
       } catch (err) {
-        console.error(err);
+        console.error("API Error:", err);
       } finally {
         setLoading(false);
       }
