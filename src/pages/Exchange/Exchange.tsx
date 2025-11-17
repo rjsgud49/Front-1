@@ -42,7 +42,7 @@ export default function Exchange() {
           to="/exchange/profile-decor"
           className="block p-6 transition bg-white shadow-md rounded-2xl hover:shadow-lg"
         >
-          <h2 className="mb-3 text-2xl font-bold">프로필 / 배너 꾸미기</h2>
+          <h2 className="mb-3 text-2xl font-bold">장식 구매</h2>
           <p className="mb-5 text-gray-600">
             프로필 이미지, 배너 등 내 페이지를 꾸며보세요.
           </p>
