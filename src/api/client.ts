@@ -1,7 +1,8 @@
-// src/api/client.ts
-import axios from 'axios';
+import axios from "axios";
 
 export const api = axios.create({
-    baseURL: 'http://3.38.107.119:8080',
-    headers: { 'Content-Type': 'application/json' },
+  baseURL: import.meta.env.PROD
+    ? "http://3.38.107.119:8080" // 배포용 (EC2)
+    : "/api", // 개발용 (Vite proxy 사용)
+  headers: { "Content-Type": "application/json" },
 });
