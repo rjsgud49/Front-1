@@ -8,7 +8,7 @@ export default function Exchange() {
       </div>
 
       {/* 카드 리스트 */}
-      <div className="max-w-[1500px] mx-auto mt-10 grid grid-cols-3 gap-8 px-4">
+      <div className="max-w-[1500px] mx-auto mt-10 grid grid-cols-3 gap-8 px-4 py-25">
         {/* 간식 구매 페이지 카드 */}
         <Link
           to="/exchange/snacks"
