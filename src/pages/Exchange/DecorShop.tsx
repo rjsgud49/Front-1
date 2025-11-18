@@ -1,6 +1,6 @@
 // src/pages/Snack/SnackShop.tsx
-import { use, useEffect, useState } from "react";
-import { api } from "../../api/client"; // baseURL 설정된 axios 인스턴스 사용
+import { useEffect, useState } from "react";
+import { api } from "../../api/client";
 
 type Point = {
   userUuid: string;
@@ -20,33 +20,64 @@ type Item = {
   createdAt: string;
 };
 
-const handlePurchase = async (itemUuid: string) => {
-  try {
-    const res = await api.post("/api/trade/purchase", {
-      itemUuid,
-      quantity: 1, // 기본 구매 수량 1
-    });
-
-    console.log("구매 결과:", res.data);
-
-    alert("구매 성공!");
-    window.location.reload(); // 🔥 페이지 새로고침
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
-    console.error("구매 실패:", err);
-
-    if (err.response?.status === 400) {
-      alert("포인트가 부족합니다!");
-    } else {
-      alert("구매 중 오류가 발생했습니다.");
-    }
-  }
-};
-
-export default function SnackShop() {
+export default function DecorShop() {
   const [point, setPoint] = useState<number>(0);
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // ✔ 수량 상태 (각 itemUuid별로 저장)
+  const [quantity, setQuantity] = useState<Record<string, number>>({});
+
+  // ✔ 수량 증가/감소 함수
+  const increase = (uuid: string) => {
+    setQuantity((prev) => ({
+      ...prev,
+      [uuid]: (prev[uuid] || 0) + 1,
+    }));
+  };
+
+  const decrease = (uuid: string) => {
+    setQuantity((prev) => ({
+      ...prev,
+      [uuid]: prev[uuid] > 0 ? prev[uuid] - 1 : 0,
+    }));
+  };
+
+  // ✔ 구매 요청 함수
+  const handlePurchase = async (item: Item) => {
+    const count = quantity[item.itemUuid] || 0;
+
+    if (count === 0) {
+      alert("1개 이상 선택해주세요!");
+      return;
+    }
+
+    // 구매 확인 창
+    const isOk = confirm(
+      `${item.name}을(를) ${count}개 구매하시겠습니까?\n총 가격: ${(item.price * count).toLocaleString()}P`
+    );
+    if (!isOk) return;
+
+    try {
+      const res = await api.post("/api/trade/purchase", {
+        itemUuid: item.itemUuid,
+        quantity: count,
+      });
+
+      console.log("구매 결과:", res.data);
+
+      alert("구매 성공!");
+      window.location.reload();
+    } catch (err: any) {
+      console.error("구매 실패:", err);
+
+      if (err.response?.status === 400) {
+        alert("포인트가 부족합니다!");
+      } else {
+        alert("구매 중 오류가 발생했습니다.");
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchUserPoints = async () => {
@@ -59,9 +90,7 @@ export default function SnackShop() {
         });
 
         const pointData: Point = es.data.data;
-        setPoint(pointData.totalPoints); // ⭐ 포인트 저장
-
-        console.log("User Points:", pointData);
+        setPoint(pointData.totalPoints);
       } catch (err) {
         console.error("포인트 불러오기 실패:", err);
       } finally {
@@ -84,6 +113,13 @@ export default function SnackShop() {
         });
 
         setItems(res.data.data.content);
+
+        // 초기 수량 0으로 설정
+        const initQty: Record<string, number> = {};
+        res.data.data.content.forEach((item: Item) => {
+          initQty[item.itemUuid] = 0;
+        });
+        setQuantity(initQty);
       } catch (err) {
         console.error("아이템 불러오기 실패:", err);
       } finally {
@@ -120,12 +156,12 @@ export default function SnackShop() {
         </p>
       </div>
 
-      {/* 카드 리스트 */}
+      {/* 아이템 카드 */}
       <div className="max-w-[1500px] mx-auto mt-10 grid grid-cols-4 gap-8 px-4 pb-20">
         {items.map((item) => (
           <div
             key={item.itemUuid}
-            className="p-6 transition bg-white shadow-md cursor-pointer rounded-2xl hover:shadow-lg"
+            className="p-6 transition bg-white shadow-md rounded-2xl hover:shadow-lg"
           >
             <img
               src={item.imageUrl}
@@ -142,10 +178,31 @@ export default function SnackShop() {
               가격: {item.price.toLocaleString()}P
             </p>
 
-            <div className="flex items-center justify-between mt-3">
+            {/* ✔ 수량 조절 UI */}
+            <div className="flex items-center mt-3 space-x-3">
+              <button
+                onClick={() => decrease(item.itemUuid)}
+                className="px-3 py-1 text-lg bg-gray-200 rounded-lg hover:bg-gray-300"
+              >
+                -
+              </button>
+
+              <span className="w-10 text-lg font-bold text-center">
+                {quantity[item.itemUuid]}
+              </span>
+
+              <button
+                onClick={() => increase(item.itemUuid)}
+                className="px-3 py-1 text-lg bg-gray-200 rounded-lg hover:bg-gray-300"
+              >
+                +
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between mt-4">
               <span className="text-sm text-gray-500">재고: {item.stock}</span>
               <button
-                onClick={() => handlePurchase(item.itemUuid)}
+                onClick={() => handlePurchase(item)}
                 className="px-3 py-1 text-sm text-white bg-blue-500 rounded-lg hover:bg-blue-600"
               >
                 구매하기

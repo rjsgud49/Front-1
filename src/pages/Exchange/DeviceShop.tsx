@@ -1,4 +1,3 @@
-// src/pages/Snack/SnackShop.tsx
 import { use, useEffect, useState } from "react";
 import { api } from "../../api/client"; // baseURL 설정된 axios 인스턴스 사용
 
@@ -43,7 +42,7 @@ const handlePurchase = async (itemUuid: string) => {
   }
 };
 
-export default function SnackShop() {
+export default function DeviceShop() {
   const [point, setPoint] = useState<number>(0);
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
