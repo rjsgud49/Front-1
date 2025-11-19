@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../../api/client"; // baseURL 설정된 axios 인스턴스 사용
+import { api } from "../../api/client";
 
 type Point = {
   userUuid: string;
@@ -29,7 +29,7 @@ const handlePurchase = async (itemUuid: string) => {
     console.log("구매 결과:", res.data);
 
     alert("구매 성공!");
-    window.location.reload(); // 🔥 페이지 새로고침
+    window.location.reload(); // 페이지 새로고침
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("구매 실패:", err);
@@ -58,7 +58,7 @@ export default function DeviceShop() {
         });
 
         const pointData: Point = es.data.data;
-        setPoint(pointData.totalPoints); // ⭐ 포인트 저장
+        setPoint(pointData.totalPoints); // 포인트 저장
 
         console.log("User Points:", pointData);
       } catch (err) {

@@ -27,15 +27,15 @@ export default function DecorShop() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // ✔ 수량 상태 (각 itemUuid별로 저장)
+  // 수량 상태 (각 itemUuid별로 저장)
   const [quantity, setQuantity] = useState<Record<string, number>>({});
 
-  // ✔ 구매 요청 함수
+  // 구매 요청 함수
   const handlePurchase = async (item: Item) => {
     let count = quantity[item.itemUuid] || 0;
 
     if (count <= 0) {
-      count = 1; // ⭐ 최소 1 보장
+      count = 1;
     }
 
     const isOk = confirm(
@@ -146,7 +146,7 @@ export default function DecorShop() {
             key={item.itemUuid}
             className="p-6 transition bg-white shadow-md rounded-2xl hover:shadow-lg"
           >
-            {/* 카드 이미지 - 배너 크기에 맞춰 꽉 차게 */}
+            {/* 카드 이미지 */}
             <div className="relative w-full h-48 mb-4 overflow-hidden rounded-lg">
               <img
                 src={item.imageUrl}

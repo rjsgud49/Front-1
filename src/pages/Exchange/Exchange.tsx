@@ -102,9 +102,7 @@ export default function Exchange() {
         </Link>
       </div>
 
-      {/* ===================== */}
       {/* 구매내역 모달 영역 */}
-      {/* ===================== */}
       {showModal && (
         <div
           onClick={closeModal}
