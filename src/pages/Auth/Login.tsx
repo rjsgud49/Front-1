@@ -1,18 +1,44 @@
-import { useEffect } from "react";
 import Design from "./LoginRight";
 import LoginLeft from "./LoginLeft";
+import { useEffect, useRef } from "react";
+import { useAuth } from "../../auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const { user, authLoading } = useAuth();
+
+  const hasCheckedInitial = useRef(false);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
-    document.body.style.overflow = "hidden"; // 스크롤 안되게 막음
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "auto"; // 원래대로 돌려놓음
+      document.body.style.overflow = "auto";
     };
   }, []);
+
+  useEffect(() => {
+    if (!authLoading) {
+      // 최초 진입 시 1번만 검사
+      if (!hasCheckedInitial.current) {
+        hasCheckedInitial.current = true;
+
+        if (user) {
+          alert("이미 로그인되어 있습니다.");
+          navigate("/");
+        }
+      }
+    }
+  }, [authLoading, user, navigate]);
+
+  if (authLoading) return null;
+
+  if (user) return null;
   return (
     <div className="flex w-full h-screen">
-      <LoginLeft /> {/* 로그인 폼 왼쪽 부분 */}
-      <Design /> {/* 디자인 테스트 영역 오른쪽 부분 */}
+      <LoginLeft />
+      <Design />
     </div>
   );
 }
