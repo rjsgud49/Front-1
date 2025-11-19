@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "../../auth/AuthContext";
 
 const LoginLeft = () => {
+  const { user, authLoading } = useAuth();
+
+  const hasCheckedInitial = useRef(false);
+
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // ← 이걸로만 관리
@@ -30,6 +34,31 @@ const LoginLeft = () => {
       setErr("아이디 또는 비밀번호가 올바르지 않습니다.");
     }
   };
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!authLoading) {
+      // 최초 진입 시 1번만 검사
+      if (!hasCheckedInitial.current) {
+        hasCheckedInitial.current = true;
+
+        if (user) {
+          alert("이미 로그인되어 있습니다.");
+          navigate("/");
+        }
+      }
+    }
+  }, [authLoading, user, navigate]);
+
+  if (authLoading) return null;
+
+  if (user) return null;
 
   return (
     <div className="w-[480px] h-screen bg-gray-200">
