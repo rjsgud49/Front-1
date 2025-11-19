@@ -16,6 +16,7 @@ import CommunityWrite from "./pages/Community/CommunityWrite";
 import SnackShop from "./pages/Exchange/SnackShop";
 import DeviceShop from "./pages/Exchange/DeviceShop";
 import DecorShop from "./pages/Exchange/DecorShop";
+import Login2 from "./pages/Auth/Login2/Login2";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
 
         {/* 인증 관련 라우트 */}
         <Route path="/login" element={<Login />} />
+        <Route path="/login2" element={<Login2 />} />
 
         {/* 맨 마지막에 배치할 것!! */}
         <Route path="*" element={<NotFound />} />
