@@ -26,7 +26,6 @@ const ProfileDropdown = () => {
         <Link
           to="/profile"
           onClick={(e) => {
-            // hide the nearest ancestor dropdown container (matches the root div's "z-50" class)
             const dropdown = (e.currentTarget as HTMLElement).closest(
               ".z-50"
             ) as HTMLElement | null;
