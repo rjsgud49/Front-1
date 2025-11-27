@@ -3,10 +3,10 @@ import { useMemo, useState } from "react";
 type Channel = "general" | "dev";
 
 const ChannelSection = () => {
-  // 1) 현재 선택된 채널
+  // 현재 선택된 채널
   const [active, setActive] = useState<Channel>("general");
 
-  // 2) 채널 정보를 가진 글 목록
+  // 채널 정보를 가진 글 목록
   const posts = [
     {
       id: 1,
@@ -27,13 +27,13 @@ const ChannelSection = () => {
     { id: 5, title: "학원 근처 맛집 추천해요!", channel: "general" as Channel },
   ];
 
-  // 3) 선택된 채널에 맞게 필터링
+  // 선택된 채널에 맞게 필터링
   const filtered = useMemo(
     () => posts.filter((p) => p.channel === active),
     [active]
   );
 
-  // 4) 버튼 공통 클래스 + 활성화 클래스
+  // 버튼 공통 클래스 + 활성화 클래스
   const baseBtn =
     "px-4 py-2 rounded-md transition shadow focus:outline-none focus:ring-2 focus:ring-offset-2";
   const activeBtn = "bg-indigo-500 text-white hover:bg-indigo-600";
