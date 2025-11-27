@@ -139,7 +139,7 @@ export default function Profile() {
             <div className="flex justify-center h-auto p-6 border rounded-2xl font-notosans">
               <ActivityCalendar
                 // username={`${profile?.links?.github?.split('github.com/')[1]}`}
-                username={`Juyoung0809`}
+                username="rlaxogh76"
                 blockSize={14}
                 colorScheme="light"
                 labels={labels}
