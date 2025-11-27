@@ -33,7 +33,7 @@ function App() {
         <Route path="/exchange" element={<Exchange />} />
         <Route path="/exchange/snacks" element={<SnackShop />} />
         <Route path="/exchange/devices" element={<DeviceShop />} />
-        <Route path="/exchange/profile-decor" element={<ProfileDecor />} />
+        <Route path="/exchange/profile-decor" element={<DecorShop />} />
 
         <Route path="/events" element={<Events />} />
         <Route path="/blog" element={<Blog />} />
