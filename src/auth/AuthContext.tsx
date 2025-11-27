@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 // src/auth/AuthContext.tsx
-import React, { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 
 type User = {
   id: string;
@@ -12,7 +12,7 @@ type User = {
   profileImage?: string;
 } | null;
 
-type LoginKind = "user" | "admin";
+type LoginKind = 'user' | 'admin';
 type LoginOptions = {
   kind?: LoginKind;
   path?: string;
@@ -20,11 +20,7 @@ type LoginOptions = {
 
 type AuthContextType = {
   user: User | undefined;
-  login: (
-    id: string,
-    password: string,
-    opts?: LoginOptions
-  ) => Promise<boolean>;
+  login: (id: string, password: string, opts?: LoginOptions) => Promise<boolean>;
   logout: () => void;
   authLoading: boolean;
 };
@@ -32,25 +28,23 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 const api = axios.create({
-  baseURL: "http://3.38.107.119:8080/",
-  headers: { "Content-Type": "application/json" },
+  baseURL: 'http://3.38.107.119:8080/',
+  headers: { 'Content-Type': 'application/json' },
   withCredentials: false,
 });
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // ⭐ 핵심: 초기값 undefined
   const [user, setUser] = useState<User | undefined>(undefined);
   const [authLoading, setAuthLoading] = useState(true);
 
   // 로컬스토리지 복원
   useEffect(() => {
-    const savedUser = localStorage.getItem("auth_user");
-    const tokenType = localStorage.getItem("token_type");
-    const accessToken = localStorage.getItem("access_token");
-    const refreshToken = localStorage.getItem("refresh_token");
-    const tokenExpiry = localStorage.getItem("token_expiry");
+    const savedUser = localStorage.getItem('auth_user');
+    const tokenType = localStorage.getItem('token_type');
+    const accessToken = localStorage.getItem('access_token');
+    const refreshToken = localStorage.getItem('refresh_token');
+    const tokenExpiry = localStorage.getItem('token_expiry');
 
     if (savedUser) {
       setUser(JSON.parse(savedUser));
@@ -59,16 +53,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     if (tokenType && accessToken) {
-      api.defaults.headers.common["Authorization"] =
-        `${tokenType} ${accessToken}`;
+      api.defaults.headers.common['Authorization'] = `${tokenType} ${accessToken}`;
     }
     setAuthLoading(false);
   }, []);
 
   const login = async (id: string, password: string, opts?: LoginOptions) => {
-    const endpoint =
-      opts?.path ??
-      (opts?.kind === "admin" ? "/auth/admin/login" : "/auth/login");
+    const endpoint = opts?.path ?? (opts?.kind === 'admin' ? '/auth/admin/login' : '/auth/login');
 
     try {
       const res = await api.post(endpoint, { id, password });
@@ -96,14 +87,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         profileImage,
       };
 
-      localStorage.setItem("auth_user", JSON.stringify(nextUser));
-      localStorage.setItem("user_uuid", safeUuid);
-      localStorage.setItem("token_type", tokenType);
-      localStorage.setItem("access_token", accessToken);
-      localStorage.setItem("refresh_token", refreshToken);
+      localStorage.setItem('auth_user', JSON.stringify(nextUser));
+      localStorage.setItem('user_uuid', safeUuid);
+      localStorage.setItem('token_type', tokenType);
+      localStorage.setItem('access_token', accessToken);
+      localStorage.setItem('refresh_token', refreshToken);
 
-      api.defaults.headers.common["Authorization"] =
-        `${tokenType} ${accessToken}`;
+      api.defaults.headers.common['Authorization'] = `${tokenType} ${accessToken}`;
 
       setUser(nextUser);
       return true;
@@ -114,7 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = () => {
     localStorage.clear();
-    delete api.defaults.headers.common["Authorization"];
+    delete api.defaults.headers.common['Authorization'];
     setUser(null);
   };
 
@@ -127,6 +117,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
   return ctx;
 };
