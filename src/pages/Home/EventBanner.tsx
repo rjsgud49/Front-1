@@ -1,4 +1,4 @@
-import ImageBox from "../../components/ImageBox";
+import ImageBox from '@/components/ImageBox';
 
 const EventBanner = () => (
   <div className="w-full">

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { api } from "../../api/client";
+import { useEffect, useState } from 'react';
+import { api } from '@/api/client';
 
 type Point = {
   userUuid: string;
@@ -21,23 +21,23 @@ type Item = {
 
 const handlePurchase = async (itemUuid: string) => {
   try {
-    const res = await api.post("/api/trade/purchase", {
+    const res = await api.post('/api/trade/purchase', {
       itemUuid,
       quantity: 1, // 기본 구매 수량 1
     });
 
-    console.log("구매 결과:", res.data);
+    console.log('구매 결과:', res.data);
 
-    alert("구매 성공!");
+    alert('구매 성공!');
     window.location.reload(); // 페이지 새로고침
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    console.error("구매 실패:", err);
+    console.error('구매 실패:', err);
 
     if (err.response?.status === 400) {
-      alert("포인트가 부족합니다!");
+      alert('포인트가 부족합니다!');
     } else {
-      alert("구매 중 오류가 발생했습니다.");
+      alert('구매 중 오류가 발생했습니다.');
     }
   }
 };
@@ -51,18 +51,18 @@ export default function DeviceShop() {
     const fetchUserPoints = async () => {
       try {
         setLoading(true);
-        const es = await api.get("/api/points/balance", {
+        const es = await api.get('/api/points/balance', {
           params: {
-            userUuid: localStorage.getItem("user_uuid"),
+            userUuid: localStorage.getItem('user_uuid'),
           },
         });
 
         const pointData: Point = es.data.data;
         setPoint(pointData.totalPoints); // 포인트 저장
 
-        console.log("User Points:", pointData);
+        console.log('User Points:', pointData);
       } catch (err) {
-        console.error("포인트 불러오기 실패:", err);
+        console.error('포인트 불러오기 실패:', err);
       } finally {
         setLoading(false);
       }
@@ -71,20 +71,20 @@ export default function DeviceShop() {
     const fetchFoodItems = async () => {
       try {
         setLoading(true);
-        const res = await api.get("/api/trade/items/search", {
+        const res = await api.get('/api/trade/items/search', {
           params: {
-            category: "TOOLS",
+            category: 'TOOLS',
             active: true,
             page: 0,
             size: 20,
-            sort: "createdAt",
-            dir: "desc",
+            sort: 'createdAt',
+            dir: 'desc',
           },
         });
 
         setItems(res.data.data.content);
       } catch (err) {
-        console.error("아이템 불러오기 실패:", err);
+        console.error('아이템 불러오기 실패:', err);
       } finally {
         setLoading(false);
       }
@@ -103,25 +103,21 @@ export default function DeviceShop() {
 
       {/* 로딩 */}
       {loading && (
-        <p className="mt-10 text-xl font-semibold text-center text-gray-600">
-          불러오는 중...
-        </p>
+        <p className="mt-10 text-xl font-semibold text-center text-gray-600">불러오는 중...</p>
       )}
 
       {/* 사용자 포인트 */}
       <div className="max-w-[1500px] mx-auto mt-10 px-4 py-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold">내 포인트</h2>
         <p className="mt-2 text-lg text-gray-700">
-          현재 보유 포인트:{" "}
-          <span className="font-bold text-blue-600">
-            {point.toLocaleString()}P
-          </span>
+          현재 보유 포인트:{' '}
+          <span className="font-bold text-blue-600">{point.toLocaleString()}P</span>
         </p>
       </div>
 
       {/* 카드 리스트 */}
       <div className="max-w-[1500px] mx-auto mt-10 grid grid-cols-4 gap-8 px-4 pb-20">
-        {items.map((item) => (
+        {items.map(item => (
           <div
             key={item.itemUuid}
             className="p-6 transition bg-white shadow-md cursor-pointer rounded-2xl hover:shadow-lg"
@@ -133,9 +129,7 @@ export default function DeviceShop() {
             />
 
             <h2 className="mb-2 text-2xl font-bold">{item.name}</h2>
-            <p className="mb-3 text-gray-600">
-              {item.description || "설명 없음"}
-            </p>
+            <p className="mb-3 text-gray-600">{item.description || '설명 없음'}</p>
 
             <p className="text-lg font-semibold text-blue-600">
               가격: {item.price.toLocaleString()}P

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/pages/Snack/SnackShop.tsx
-import { useEffect, useState } from "react";
-import { api } from "../../api/client";
+import { useEffect, useState } from 'react';
+import { api } from '@/api/client';
 
 type Point = {
   userUuid: string;
@@ -39,25 +39,27 @@ export default function DecorShop() {
     }
 
     const isOk = confirm(
-      `${item.name}을(를) ${count}개 구매하시겠습니까?\n총 가격: ${(item.price * count).toLocaleString()}P`
+      `${item.name}을(를) ${count}개 구매하시겠습니까?\n총 가격: ${(
+        item.price * count
+      ).toLocaleString()}P`
     );
     if (!isOk) return;
 
     try {
-      const res = await api.post("/api/trade/purchase", {
+      const res = await api.post('/api/trade/purchase', {
         itemUuid: item.itemUuid,
         quantity: count,
       });
 
-      alert("구매 성공!");
+      alert('구매 성공!');
       window.location.reload();
     } catch (err: any) {
-      console.error("구매 실패:", err);
+      console.error('구매 실패:', err);
 
       if (err.response?.status === 400) {
-        alert("포인트가 부족합니다!");
+        alert('포인트가 부족합니다!');
       } else {
-        alert("구매 중 오류가 발생했습니다.");
+        alert('구매 중 오류가 발생했습니다.');
       }
     }
   };
@@ -66,16 +68,16 @@ export default function DecorShop() {
     const fetchUserPoints = async () => {
       try {
         setLoading(true);
-        const es = await api.get("/api/points/balance", {
+        const es = await api.get('/api/points/balance', {
           params: {
-            userUuid: localStorage.getItem("user_uuid"),
+            userUuid: localStorage.getItem('user_uuid'),
           },
         });
 
         const pointData: Point = es.data.data;
         setPoint(pointData.totalPoints);
       } catch (err) {
-        console.error("포인트 불러오기 실패:", err);
+        console.error('포인트 불러오기 실패:', err);
       } finally {
         setLoading(false);
       }
@@ -84,14 +86,14 @@ export default function DecorShop() {
     const fetchFoodItems = async () => {
       try {
         setLoading(true);
-        const res = await api.get("/api/trade/items/search", {
+        const res = await api.get('/api/trade/items/search', {
           params: {
-            category: "ETC",
+            category: 'ETC',
             active: true,
             page: 0,
             size: 20,
-            sort: "createdAt",
-            dir: "desc",
+            sort: 'createdAt',
+            dir: 'desc',
           },
         });
 
@@ -104,7 +106,7 @@ export default function DecorShop() {
         });
         setQuantity(initQty);
       } catch (err) {
-        console.error("아이템 불러오기 실패:", err);
+        console.error('아이템 불러오기 실패:', err);
       } finally {
         setLoading(false);
       }
@@ -123,25 +125,21 @@ export default function DecorShop() {
 
       {/* 로딩 */}
       {loading && (
-        <p className="mt-10 text-xl font-semibold text-center text-gray-600">
-          불러오는 중...
-        </p>
+        <p className="mt-10 text-xl font-semibold text-center text-gray-600">불러오는 중...</p>
       )}
 
       {/* 사용자 포인트 */}
       <div className="max-w-[1500px] mx-auto mt-10 px-4 py-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold">내 포인트</h2>
         <p className="mt-2 text-lg text-gray-700">
-          현재 보유 포인트:{" "}
-          <span className="font-bold text-blue-600">
-            {point.toLocaleString()}P
-          </span>
+          현재 보유 포인트:{' '}
+          <span className="font-bold text-blue-600">{point.toLocaleString()}P</span>
         </p>
       </div>
 
       {/* 아이템 카드 */}
       <div className="max-w-[1500px] mx-auto mt-10 grid grid-cols-4 gap-8 px-4 pb-20">
-        {items.map((item) => (
+        {items.map(item => (
           <div
             key={item.itemUuid}
             className="p-6 transition bg-white shadow-md rounded-2xl hover:shadow-lg"
@@ -156,9 +154,7 @@ export default function DecorShop() {
             </div>
 
             <h2 className="mb-2 text-2xl font-bold">{item.name}</h2>
-            <p className="mb-3 text-gray-600">
-              {item.description || "설명 없음"}
-            </p>
+            <p className="mb-3 text-gray-600">{item.description || '설명 없음'}</p>
 
             <p className="text-lg font-semibold text-blue-600">
               가격: {item.price.toLocaleString()}P

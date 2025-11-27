@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { api } from "../../api/client";
-import ReactMarkdown from "react-markdown";
-import { markdownComponents } from "../../components/Markdown/MarkdownComponents";
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { api } from '@/api/client';
+import ReactMarkdown from 'react-markdown';
+import { markdownComponents } from '@/components/Markdown/MarkdownComponents';
 
 type PostDetail = {
   postUuid: string;
@@ -43,11 +43,11 @@ export default function CommunityDetail() {
 
   // 댓글 관련 상태
   const [comments, setComments] = useState<Comment[]>([]);
-  const [commentInput, setCommentInput] = useState("");
+  const [commentInput, setCommentInput] = useState('');
   const [replyInput, setReplyInput] = useState<{ [key: number]: string }>({});
   const [openReply, setOpenReply] = useState<{ [key: number]: boolean }>({});
 
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem('access_token');
 
   // 게시글 상세 불러오기
   useEffect(() => {
@@ -58,11 +58,11 @@ export default function CommunityDetail() {
         setLoading(true);
         setError(null);
 
-        const res = await api.get("/post/view", { params: { uuid } });
+        const res = await api.get(`api/posts/${uuid}`);
         setPost(res.data.data);
       } catch (err) {
         console.error(err);
-        setError("게시글을 불러오는 중 오류가 발생했습니다.");
+        setError('게시글을 불러오는 중 오류가 발생했습니다.');
       } finally {
         setLoading(false);
       }
@@ -82,7 +82,7 @@ export default function CommunityDetail() {
 
       setComments(res.data);
     } catch (err) {
-      console.error("댓글 조회 실패:", err);
+      console.error('댓글 조회 실패:', err);
     }
   };
 
@@ -92,12 +92,12 @@ export default function CommunityDetail() {
 
   // 날짜 포맷 함수
   const formatDate = (iso: string) =>
-    new Date(iso).toLocaleString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
+    new Date(iso).toLocaleString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
     });
 
   // 댓글 작성
@@ -106,21 +106,19 @@ export default function CommunityDetail() {
 
     try {
       await api.post(
-        "/api/comments",
+        '/api/comments',
         { postId: uuid, content: commentInput },
         { headers: token ? { Authorization: `Bearer ${token}` } : {} }
       );
 
-      setCommentInput("");
+      setCommentInput('');
       fetchComments();
 
       // 댓글 수 프론트에서 증가
-      setPost((prev) =>
-        prev ? { ...prev, comments: prev.comments + 1 } : prev
-      );
+      setPost(prev => (prev ? { ...prev, comments: prev.comments + 1 } : prev));
     } catch (err) {
-      console.error("댓글 작성 실패:", err);
-      alert("댓글 작성 실패");
+      console.error('댓글 작성 실패:', err);
+      alert('댓글 작성 실패');
     }
   };
 
@@ -131,7 +129,7 @@ export default function CommunityDetail() {
 
     try {
       await api.post(
-        "/api/comments",
+        '/api/comments',
         {
           postId: uuid,
           parentId,
@@ -142,10 +140,10 @@ export default function CommunityDetail() {
         }
       );
 
-      setReplyInput((prev) => ({ ...prev, [parentId]: "" }));
+      setReplyInput(prev => ({ ...prev, [parentId]: '' }));
       fetchComments();
     } catch (err) {
-      console.error("대댓글 작성 실패:", err);
+      console.error('대댓글 작성 실패:', err);
     }
   };
 
@@ -164,8 +162,8 @@ export default function CommunityDetail() {
       // 좋아요 처리 후 새로고침
       fetchComments();
     } catch (err) {
-      console.error("댓글 좋아요 실패:", err);
-      alert("로그인이 필요합니다.");
+      console.error('댓글 좋아요 실패:', err);
+      alert('로그인이 필요합니다.');
     }
   };
 
@@ -214,7 +212,7 @@ export default function CommunityDetail() {
       {/* 게시글 상세 */}
       <div className="px-6 py-6 bg-white shadow rounded-xl">
         <img
-          src={post.writerProfileImage || "/default-profile.png"}
+          src={post.writerProfileImage || '/default-profile.png'}
           className="object-cover w-10 h-10 mb-4 rounded-full"
         />
 
@@ -226,22 +224,14 @@ export default function CommunityDetail() {
         </div>
 
         <div className="mt-3 flex gap-2 text-[10px] text-gray-600">
-          <span className="px-2 py-0.5 bg-gray-100 rounded-full">
-            조회 {post.views}
-          </span>
-          <span className="px-2 py-0.5 bg-gray-100 rounded-full">
-            좋아요 {post.likes}
-          </span>
-          <span className="px-2 py-0.5 bg-gray-100 rounded-full">
-            댓글 {post.comments}
-          </span>
+          <span className="px-2 py-0.5 bg-gray-100 rounded-full">조회 {post.views}</span>
+          <span className="px-2 py-0.5 bg-gray-100 rounded-full">좋아요 {post.likes}</span>
+          <span className="px-2 py-0.5 bg-gray-100 rounded-full">댓글 {post.comments}</span>
         </div>
 
         <div className="mt-6 text-sm leading-relaxed text-gray-800">
           <div className="prose-sm prose max-w-none">
-            <ReactMarkdown components={markdownComponents}>
-              {post.content}
-            </ReactMarkdown>
+            <ReactMarkdown components={markdownComponents}>{post.content}</ReactMarkdown>
           </div>
         </div>
       </div>
@@ -252,7 +242,7 @@ export default function CommunityDetail() {
 
         <textarea
           value={commentInput}
-          onChange={(e) => setCommentInput(e.target.value)}
+          onChange={e => setCommentInput(e.target.value)}
           rows={3}
           className="w-full p-3 text-sm border border-gray-300 rounded-md"
           placeholder="댓글을 입력하세요..."
@@ -270,14 +260,11 @@ export default function CommunityDetail() {
 
       {/* 댓글 목록 */}
       <div className="mt-6 space-y-4">
-        {comments.map((c) => (
-          <div
-            key={c.commentId}
-            className="px-5 py-4 bg-white shadow rounded-xl"
-          >
+        {comments.map(c => (
+          <div key={c.commentId} className="px-5 py-4 bg-white shadow rounded-xl">
             <div className="flex gap-3">
               <img
-                src={c.writerProfileImage || "/default-profile.png"}
+                src={c.writerProfileImage || '/default-profile.png'}
                 className="rounded-full w-9 h-9"
               />
 
@@ -292,16 +279,13 @@ export default function CommunityDetail() {
 
                 {/* 좋아요 + 답글 */}
                 <div className="flex gap-3 mt-2 text-[11px] text-gray-500">
-                  <button
-                    onClick={() => toggleLike(c.commentId)}
-                    className="hover:text-blue-600"
-                  >
+                  <button onClick={() => toggleLike(c.commentId)} className="hover:text-blue-600">
                     👍 좋아요
                   </button>
 
                   <button
                     onClick={() =>
-                      setOpenReply((prev) => ({
+                      setOpenReply(prev => ({
                         ...prev,
                         [c.commentId]: !prev[c.commentId],
                       }))
@@ -316,9 +300,9 @@ export default function CommunityDetail() {
                 {openReply[c.commentId] && (
                   <div className="mt-3 ml-6">
                     <textarea
-                      value={replyInput[c.commentId] || ""}
-                      onChange={(e) =>
-                        setReplyInput((prev) => ({
+                      value={replyInput[c.commentId] || ''}
+                      onChange={e =>
+                        setReplyInput(prev => ({
                           ...prev,
                           [c.commentId]: e.target.value,
                         }))
@@ -342,19 +326,14 @@ export default function CommunityDetail() {
                 {/* 대댓글 목록 */}
                 {c.children && c.children.length > 0 && (
                   <div className="mt-4 ml-8 space-y-3">
-                    {c.children.map((child) => (
-                      <div
-                        key={child.commentId}
-                        className="pl-3 border-l border-gray-300"
-                      >
+                    {c.children.map(child => (
+                      <div key={child.commentId} className="pl-3 border-l border-gray-300">
                         <div className="flex gap-2 text-xs text-gray-600">
                           <span>{child.writer}</span>
                           <span>· {formatDate(child.createdAt)}</span>
                         </div>
 
-                        <p className="mt-1 text-sm whitespace-pre-line">
-                          {child.content}
-                        </p>
+                        <p className="mt-1 text-sm whitespace-pre-line">{child.content}</p>
 
                         <button
                           onClick={() => toggleLike(child.commentId)}

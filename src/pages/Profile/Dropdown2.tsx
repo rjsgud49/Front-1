@@ -1,6 +1,6 @@
 // import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { useAuth } from "../../auth/AuthContext";
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/auth/AuthContext';
 
 // 헤더에서 프로필 이미지 클릭 시 나타나는 드롭다운 메뉴 컴포넌트
 const ProfileDropdown = () => {
@@ -10,7 +10,7 @@ const ProfileDropdown = () => {
 
   const handleLogout = () => {
     logout();
-    window.location.href = "/";
+    window.location.href = '/';
   };
 
   return (
@@ -25,11 +25,11 @@ const ProfileDropdown = () => {
         </div>
         <Link
           to="/profile"
-          onClick={(e) => {
+          onClick={e => {
             const dropdown = (e.currentTarget as HTMLElement).closest(
-              ".z-50"
+              '.z-50'
             ) as HTMLElement | null;
-            if (dropdown) dropdown.style.display = "none";
+            if (dropdown) dropdown.style.display = 'none';
           }}
         >
           <img

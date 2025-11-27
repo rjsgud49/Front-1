@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import { api } from "../../api/client";
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { api } from '@/api/client';
 
 type PurchaseLog = {
   logUuid: string;
@@ -29,12 +29,12 @@ export default function Exchange() {
   const fetchLogs = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/api/trade/my/logs", {
+      const res = await api.get('/api/trade/my/logs', {
         params: { page: 0, size: 20 },
       });
       setLogs(res.data.data.content);
     } catch (err) {
-      console.error("구매내역 불러오기 실패:", err);
+      console.error('구매내역 불러오기 실패:', err);
     } finally {
       setLoading(false);
     }
@@ -79,9 +79,7 @@ export default function Exchange() {
           className="block p-6 transition bg-white shadow-md rounded-2xl hover:shadow-lg"
         >
           <h2 className="mb-3 text-2xl font-bold">장비 / 키보드 구매</h2>
-          <p className="mb-5 text-gray-600">
-            키보드, 마우스 등 아이템을 구매해 업그레이드하세요.
-          </p>
+          <p className="mb-5 text-gray-600">키보드, 마우스 등 아이템을 구매해 업그레이드하세요.</p>
           <div className="px-4 py-2 text-white bg-green-600 rounded-lg w-fit hover:bg-green-700">
             이동하기
           </div>
@@ -93,9 +91,7 @@ export default function Exchange() {
           className="block p-6 transition bg-white shadow-md rounded-2xl hover:shadow-lg"
         >
           <h2 className="mb-3 text-2xl font-bold">장식 구매</h2>
-          <p className="mb-5 text-gray-600">
-            프로필 이미지, 배너 등 내 페이지를 꾸며보세요.
-          </p>
+          <p className="mb-5 text-gray-600">프로필 이미지, 배너 등 내 페이지를 꾸며보세요.</p>
           <div className="px-4 py-2 text-white bg-purple-600 rounded-lg w-fit hover:bg-purple-700">
             이동하기
           </div>
@@ -109,33 +105,26 @@ export default function Exchange() {
           className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-opacity-50"
         >
           <div
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
             className="w-[700px] max-h-[80vh] bg-white rounded-xl shadow-xl p-6 overflow-y-auto"
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold">내 구매내역</h2>
-              <button
-                onClick={closeModal}
-                className="text-xl text-gray-500 hover:text-gray-700"
-              >
+              <button onClick={closeModal} className="text-xl text-gray-500 hover:text-gray-700">
                 ✕
               </button>
             </div>
 
             {/* 로딩 */}
-            {loading && (
-              <p className="mt-10 text-center text-gray-500">불러오는 중...</p>
-            )}
+            {loading && <p className="mt-10 text-center text-gray-500">불러오는 중...</p>}
 
             {/* 구매내역 리스트 */}
             {!loading && logs.length === 0 && (
-              <p className="mt-10 text-center text-gray-500">
-                구매내역이 없습니다.
-              </p>
+              <p className="mt-10 text-center text-gray-500">구매내역이 없습니다.</p>
             )}
 
             {!loading &&
-              logs.map((log) => (
+              logs.map(log => (
                 <div
                   key={log.logUuid}
                   className="p-4 mb-4 transition rounded-lg shadow-sm bg-gray-50 hover:shadow-md"

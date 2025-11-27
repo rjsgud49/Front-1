@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { DivProps } from '../@types/index';
+import type { DivProps } from '@/@types/index';
 
 //prettier-ignore
 export const Div:FC<DivProps> = ({

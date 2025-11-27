@@ -1,8 +1,8 @@
-import Design from "./LoginRight";
-import LoginLeft from "./LoginLeft";
-import { useEffect, useRef } from "react";
-import { useAuth } from "../../auth/AuthContext";
-import { useNavigate } from "react-router-dom";
+import Design from './LoginRight';
+import LoginLeft from './LoginLeft';
+import { useEffect, useRef } from 'react';
+import { useAuth } from '@/auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const { user, authLoading } = useAuth();
@@ -12,9 +12,9 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = 'auto';
     };
   }, []);
 
@@ -25,8 +25,8 @@ export default function Login() {
         hasCheckedInitial.current = true;
 
         if (user) {
-          alert("이미 로그인되어 있습니다.");
-          navigate("/");
+          alert('이미 로그인되어 있습니다.');
+          navigate('/');
         }
       }
     }

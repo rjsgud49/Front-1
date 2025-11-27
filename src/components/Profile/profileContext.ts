@@ -1,4 +1,4 @@
-import { api } from '../../api/client';
+import { api } from '@/api/client';
 
 export const fetchUserProfile = async (uuid: string) => {
   try {

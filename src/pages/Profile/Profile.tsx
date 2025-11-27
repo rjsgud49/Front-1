@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { FaGithub, FaLinkedin, FaStackOverflow } from 'react-icons/fa';
 
-import { Avatar } from '../../components/Avatar';
+import { Avatar } from '@/components/Avatar';
 import { Icon } from '@iconify/react';
 import ActivityCalendar from 'react-github-calendar';
-import { labels } from '../../components/githubCalendarLabels';
-import BlogCarousel from '../../components/BlogCarousel';
-import { Div } from '../../components/Div';
-import { useAuth } from '../../auth/AuthContext';
-import { fetchUserProfile } from '../../components/Profile/profileContext';
+import { labels } from '@/components/githubCalendarLabels';
+import BlogCarousel from '@/components/BlogCarousel';
+import { Div } from '@/components/Div';
+import { useAuth } from '@/auth/AuthContext';
+import { fetchUserProfile } from '@/components/Profile/profileContext';
 
 import { useNavigate } from 'react-router-dom';
 
