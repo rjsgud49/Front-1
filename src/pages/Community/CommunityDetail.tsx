@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { api } from '../../api/client';
 import ReactMarkdown from 'react-markdown';
-import { markdownComponents } from '../../components/Markdown/MarkdownComponents';
+
+import { api } from '@/api/client';
+import { markdownComponents } from '@/components/Markdown/MarkdownComponents';
 
 type PostDetail = {
   postUuid: string;
@@ -210,13 +211,16 @@ export default function CommunityDetail() {
       <div className="px-6 py-6 bg-white shadow rounded-xl">
         <img
           src={post.writerProfileImage || '/default-profile.png'}
-          className="object-cover w-10 h-10 mb-4 rounded-full"
+          className="object-cover w-10 h-10 mb-4 rounded-full hover:cursor-pointer"
+          onClick={() => navigate(`/profile/${post.writerUuid}`)}
         />
 
         <h1 className="text-xl font-semibold">{post.title}</h1>
 
         <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-          <span>{post.writer}</span>
+          <span className="hover:cursor-pointer" onClick={() => navigateToProfile(post.writerUuid)}>
+            {post.writer}
+          </span>
           <span>· {formatDate(post.writedAt)}</span>
         </div>
 
@@ -262,13 +266,19 @@ export default function CommunityDetail() {
             <div className="flex gap-3">
               <img
                 src={c.writerProfileImage || '/default-profile.png'}
-                className="rounded-full w-9 h-9"
+                className="rounded-full w-9 h-9 hover:cursor-pointer"
+                onClick={() => navigateToProfile(c.writerUuid)}
               />
 
               <div className="flex-1">
                 {/* 상위 댓글 */}
                 <div className="flex gap-2 text-xs text-gray-600">
-                  <span>{c.writer}</span>
+                  <span
+                    className="hover:cursor-pointer"
+                    onClick={() => navigateToProfile(c.writerUuid)}
+                  >
+                    {c.writer}
+                  </span>
                   <span>· {formatDate(c.createdAt)}</span>
                 </div>
 
@@ -326,7 +336,12 @@ export default function CommunityDetail() {
                     {c.children.map(child => (
                       <div key={child.commentId} className="pl-3 border-l border-gray-300">
                         <div className="flex gap-2 text-xs text-gray-600">
-                          <span>{child.writer}</span>
+                          <span
+                            className="hover:cursor-pointer"
+                            onClick={() => navigateToProfile(child.writerUuid)}
+                          >
+                            {child.writer}
+                          </span>
                           <span>· {formatDate(child.createdAt)}</span>
                         </div>
 

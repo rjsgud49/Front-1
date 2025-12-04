@@ -25,7 +25,7 @@ const ProfileDropdown = () => {
           />
         </div>
         <Link
-          to="/profile"
+          to="/mypage"
           onClick={e => {
             const dropdown = (e.currentTarget as HTMLElement).closest(
               '.z-50'

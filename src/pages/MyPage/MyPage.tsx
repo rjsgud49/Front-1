@@ -11,14 +11,14 @@ import { Div } from '@/components/Div';
 import { useAuth } from '@/auth/AuthContext';
 import { fetchUserProfile } from '@/components/Profile/profileContext';
 
-type ProfileType = {
+type MyPageType = {
   uuid: string;
   userRealname: string;
   profileImage?: string;
   profileBanner?: string;
   role?: string;
   intro?: string;
-  techStack: string[];
+  techStack?: string[];
   links?: {
     [key: string]: string;
   };
@@ -28,7 +28,7 @@ export default function MyPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const [profile, setProfile] = useState<ProfileType | null>(null);
+  const [profile, setProfile] = useState<MyPageType | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedBanner, setSelectedBanner] = useState<number>(0);
 
@@ -49,7 +49,6 @@ export default function MyPage() {
       if (!uuid) return;
 
       const data = await fetchUserProfile(uuid);
-
       setProfile(data);
     })();
   }, [user]);
@@ -106,27 +105,35 @@ export default function MyPage() {
               {profile?.intro}
             </p>
 
-            <div className="flex items-center gap-3 mt-2 text-gray-600">
-              <FaGithub
-                className="text-xl cursor-pointer hover:text-black"
-                onClick={() =>
-                  profile?.links?.github && window.open(profile.links.github, '_blank')
-                }
-              />
-              <FaLinkedin
-                className="text-xl cursor-pointer hover:text-sky-700"
-                onClick={() =>
-                  profile?.links?.linkedin && window.open(profile.links.linkedin, '_blank')
-                }
-              />
-              <FaStackOverflow
-                className="text-xl cursor-pointer hover:text-orange-500"
-                onClick={() =>
-                  profile?.links?.stackoverflow &&
-                  window.open(profile.links.stackoverflow, '_blank')
-                }
-              />
-            </div>
+            {profile?.links && (
+              <div className="flex items-center gap-3 mt-2 text-gray-600">
+                {profile?.links?.github && (
+                  <FaGithub
+                    className="text-xl cursor-pointer hover:text-black"
+                    onClick={() =>
+                      profile?.links?.github && window.open(profile.links.github, '_blank')
+                    }
+                  />
+                )}
+                {profile?.links?.linkedin && (
+                  <FaLinkedin
+                    className="text-xl cursor-pointer hover:text-sky-700"
+                    onClick={() =>
+                      profile?.links?.linkedin && window.open(profile.links.linkedin, '_blank')
+                    }
+                  />
+                )}
+                {profile?.links?.stackoverflow && (
+                  <FaStackOverflow
+                    className="text-xl cursor-pointer hover:text-orange-500"
+                    onClick={() =>
+                      profile?.links?.stackoverflow &&
+                      window.open(profile.links.stackoverflow, '_blank')
+                    }
+                  />
+                )}
+              </div>
+            )}
           </div>
 
           {/* 기술 스택 */}
