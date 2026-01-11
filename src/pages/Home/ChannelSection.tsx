@@ -7,26 +7,32 @@ const ChannelSection = () => {
   const [active, setActive] = useState<Channel>("general");
 
   // 채널 정보를 가진 글 목록
-  const posts = [
-    {
-      id: 1,
-      title: "이번 주 스터디 모임 공지합니다.",
-      channel: "general" as Channel,
-    },
-    {
-      id: 2,
-      title: "React 상태관리 어떤 걸 쓰면 좋을까요?",
-      channel: "dev" as Channel,
-    },
-    { id: 3, title: "Java 실습에서 질문 있습니다!", channel: "dev" as Channel },
-    {
-      id: 4,
-      title: "Next.js 15에서 app router 오류 질문",
-      channel: "dev" as Channel,
-    },
-    { id: 5, title: "학원 근처 맛집 추천해요!", channel: "general" as Channel },
-  ];
+  // const posts = [
+  //   {
+  //     id: 1,
+  //     title: "이번 주 스터디 모임 공지합니다.",
+  //     channel: "general" as Channel,
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "React 상태관리 어떤 걸 쓰면 좋을까요?",
+  //     channel: "dev" as Channel,
+  //   },
+  //   { id: 3, title: "Java 실습에서 질문 있습니다!", channel: "dev" as Channel },
+  //   {
+  //     id: 4,
+  //     title: "Next.js 15에서 app router 오류 질문",
+  //     channel: "dev" as Channel,
+  //   },
+  //   { id: 5, title: "학원 근처 맛집 추천해요!", channel: "general" as Channel },
+  // ];
 
+  // 더미 글 10개 생성  
+  const posts = Array.from({ length: 10 }, (_, i) => ({
+    id: i + 1,
+    title: `더미 글 제목 ${i + 1}`,
+    channel: i % 2 === 0 ? "general" as Channel : "dev" as Channel,
+  }));
   // 선택된 채널에 맞게 필터링
   const filtered = useMemo(
     () => posts.filter((p) => p.channel === active),
